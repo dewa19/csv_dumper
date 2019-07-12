@@ -3,12 +3,16 @@ defmodule CsvDumper.Application do
   # for more information on OTP Applications
   @moduledoc false
 
+
   use Application
+  #alias CsvDumper.DownloadPeriodically
 
   def start(_type, _args) do
     children = [
       # Starts a worker by calling: CsvDumper.Worker.start_link(arg)
       # {CsvDumper.Worker, arg}
+      {Redix, name: :redix},
+      #{CsvDumper.DownloadPeriodically,[]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

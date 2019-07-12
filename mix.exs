@@ -5,7 +5,7 @@ defmodule CsvDumper.MixProject do
     [
       app: :csv_dumper,
       version: "0.1.0",
-      elixir: "~> 1.9",
+      elixir: "~> 1.8.1",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -14,7 +14,7 @@ defmodule CsvDumper.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :redix, :exq, :exq_ui, :tzdata],
       mod: {CsvDumper.Application, []}
     ]
   end
@@ -22,8 +22,19 @@ defmodule CsvDumper.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+     {:plug_cowboy, "~> 2.0.2"},
+      # {:poison, "~> 3.1.0"},
+      # Plug : HTTP get and JSON
+      # {:httpoison, "~> 1.5.1"},
+      # {:json, "~> 0.3.3"},
+      # Redis cache
+      {:redix, ">= 0.10.2"},
+      {:poison, "~> 3.1.0"},
+      {:exq, ">= 0.13.3"},
+      {:exq_ui, "~> 0.10.0"},
+      {:tzdata, "~> 1.0.1"},
+      {:jason, "~> 1.1.2"},
+
     ]
   end
 end
