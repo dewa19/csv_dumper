@@ -12,7 +12,7 @@ defmodule CsvDumper.Application do
       # Starts a worker by calling: CsvDumper.Worker.start_link(arg)
       # {CsvDumper.Worker, arg}
       {Redix, name: :redix},
-      #{CsvDumper.DownloadPeriodically,[]}
+      {CsvDumper.DownloadPeriodically,[]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -1,6 +1,5 @@
 defmodule CsvDumper do
   @csv_data "data_csv/sample100.csv"
-  @download_url 'http://spatialkeydocs.s3.amazonaws.com/FL_insurance_sample.csv.zip'
 
   #alias ExqWorker
 
@@ -18,7 +17,7 @@ defmodule CsvDumper do
 
     Enum.each data, fn pairs ->
       case pairs do
-        [""] -> :skip_do_nothing
+        [""] -> :skip_do_nothing #EOF
         _ ->
         the_key = List.to_string(Map.keys(pairs))
         the_value = Map.values(pairs)
@@ -59,13 +58,6 @@ defmodule CsvDumper do
 
   def do_save_into_redis(key, value) do
     Redix.command(:redix, ["SET", key, value])
-  end
-
-  def do_download_csv_file do
-    {:ok, resp} = :httpc.request(:get, {@download_url, []}, [], [body_format: :binary])
-    IO.inspect resp
-    {{_, 200, 'OK'}, _headers, body} = resp
-    File.write!("data_csv/FL_sample.csv.zip", body)
   end
 
   def load_data do
