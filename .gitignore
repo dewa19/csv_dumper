@@ -4,6 +4,8 @@
 # The application log directory
 /log/
 
+# The csv directory
+/__MACOSX/
 
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
