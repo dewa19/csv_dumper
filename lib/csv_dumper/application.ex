@@ -3,16 +3,21 @@ defmodule CsvDumper.Application do
   # for more information on OTP Applications
   @moduledoc false
 
-
   use Application
-  #alias CsvDumper.DownloadPeriodically
+  # alias CsvDumper.DownloadPeriodically
 
   def start(_type, _args) do
     children = [
       # Starts a worker by calling: CsvDumper.Worker.start_link(arg)
       # {CsvDumper.Worker, arg}
       {Redix, name: :redix},
-      {CsvDumper.DownloadPeriodically,[]}
+      {CsvDumper.DownloadPeriodically, []},
+      {CsvDumper.FromCsvToRedis, []},
+      Plug.Cowboy.child_spec(
+        scheme: :http,
+        plug: CsvDumper.ApiEndpoint,
+        options: [port: cowboy_port()]
+      )
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -20,4 +25,6 @@ defmodule CsvDumper.Application do
     opts = [strategy: :one_for_one, name: CsvDumper.Supervisor]
     Supervisor.start_link(children, opts)
   end
+
+  defp cowboy_port, do: Application.get_env(:csv_dumper, :cowboy_port)
 end
