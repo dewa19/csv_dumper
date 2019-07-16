@@ -1,10 +1,8 @@
 defmodule ExqRedisWorker do
+  alias CsvDumper
 
-    alias CsvDumper
-
-    def perform(key, value) do
-      CsvDumper.do_save_into_redis(key, value)
-      IO.puts("save data into redis : #{key}")
-    end
-
+  def perform(key, value) do
+    CsvDumper.do_save_into_redis(key, value)
+    # IO.puts("save data into redis : #{key}")
+  end
 end

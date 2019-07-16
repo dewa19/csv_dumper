@@ -36,7 +36,7 @@ defmodule CsvDumper.ApiEndpoint do
                 detail: %{
                   message: "Can't find policyID = #{policyID}",
                   reason: "Unknown key",
-                  error_code: "e01"
+                  error_code: "E02"
                 }
               })
 
@@ -58,7 +58,7 @@ defmodule CsvDumper.ApiEndpoint do
             detail: %{
               message: "Redix command GET response with {:error, error}",
               reason: "#{error.reason}",
-              error_code: "e02"
+              error_code: "E03"
             }
           })
     end
@@ -66,7 +66,14 @@ defmodule CsvDumper.ApiEndpoint do
 
   match _ do
     no_match =
-      Poison.encode!(%{code: 1, type: :error, detail: %{message: "CSV Dumper : Invalid path!"}})
+      Poison.encode!(%{
+        message_type: "error",
+        detail: %{
+          message: "CSV Dumper : Invalid path!",
+          reason: "Invalid URL",
+          error_code: "E01"
+        }
+      })
 
     send_resp(conn, 404, no_match)
   end
