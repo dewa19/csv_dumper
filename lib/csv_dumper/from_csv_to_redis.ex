@@ -3,22 +3,21 @@ defmodule CsvDumper.FromCsvToRedis do
 
   alias CsvDumper
 
-  @csv_folder "data_csv"
-
-  @log_file_path "log/csv_dumper.log"
+  # in minutes
+  @scheduled_every 5
 
   def start_link(state) do
     GenServer.start_link(__MODULE__, state, [])
   end
 
   def init(opts) do
-    schedule_work(1)
+    schedule_work(@scheduled_every)
     {:ok, opts}
   end
 
   def handle_info(:processdata, state) do
     do_process_data()
-    schedule_work(1)
+    schedule_work(@scheduled_every)
     {:noreply, state}
   end
 
@@ -42,8 +41,5 @@ defmodule CsvDumper.FromCsvToRedis do
     print_time("Begin process data")
     CsvDumper.process_data()
     print_time("End process data")
-  end
-
-  def write_log(message) do
   end
 end

@@ -3,22 +3,24 @@ defmodule CsvDumper.DownloadPeriodically do
   @download_url "http://spatialkeydocs.s3.amazonaws.com/FL_insurance_sample.csv.zip"
   @csv_folder "data_csv"
   @downloaded_path Path.join([File.cwd!(), "#{@csv_folder}/FL_insurance_sample.zip"])
-  @log_file_path "log/csv_dumper.log"
+
+  # in minutes
+  @scheduled_every 5
 
   def start_link(state) do
     GenServer.start_link(__MODULE__, state, [])
   end
 
   def init(opts) do
-    schedule_work(1)
+    schedule_work(@scheduled_every)
     {:ok, opts}
   end
 
   def handle_info(:download, state) do
     do_download_csv_file()
     do_unzip_csv_file()
-    # IO.puts("The time is now: #{time}...unzip & delete zip file...")
-    schedule_work(1)
+
+    schedule_work(@scheduled_every)
     {:noreply, state}
   end
 
@@ -51,15 +53,12 @@ defmodule CsvDumper.DownloadPeriodically do
       :zip.unzip('#{@csv_folder}/FL_insurance_sample.zip', [{:cwd, "#{@csv_folder}/"}])
 
     case unzip_status do
-      {:ok, status} ->
+      {:ok, _status} ->
         File.rm("#{@csv_folder}/FL_insurance_sample.zip")
         File.rm_rf("#{@csv_folder}/__MACOSX")
 
       {:error, _} ->
         raise "Error unzip file"
     end
-  end
-
-  def write_log(message) do
   end
 end
